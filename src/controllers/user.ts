@@ -3,13 +3,13 @@ const User = require('../models/user');
 exports.createUser = (req: Request, res: Response) => {
   const {
     userName,
-    password,
+    passWord,
     email,
     avatar,
     phoneNumber,
     address,
     tokenUser,
   } = req.body;
-  const newUser = new User({userName,password,email,avatar,phoneNumber,address,tokenUser});
+  const newUser = new User({userName,passWord,email,avatar,phoneNumber,address,tokenUser});
   res.json(newUser);
 };

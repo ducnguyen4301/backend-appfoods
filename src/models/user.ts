@@ -18,7 +18,7 @@ const userSchema = new Schema<userProps>({
   avatar: { type: String },
   phoneNumber: { type: String, required: true },
   address: { type: String, required: true },
-  tokenUser: [{ type: Object }],
+  tokenUser: [{ type: String }],
 });
 
 const User = model<userProps>("User", userSchema);
