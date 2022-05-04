@@ -8,7 +8,6 @@ interface userProps {
   avatar: String;
   phoneNumber: String;
   address: String;
-  thumbnails: [];
   tokenUser: [];
 }
 
@@ -20,7 +19,6 @@ const userSchema = new Schema<userProps>({
   phoneNumber: { type: String, required: true },
   address: { type: String, required: true },
   tokenUser: [{ type: Object }],
-  thumbnails: [{ url: URL}],
 });
 
 const User = model<userProps>("User", userSchema);
