@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
-const mongoose = require("mongoose");
-const bscrypt = require("bcrypt");
+import bscrypt from "bcrypt";
+import {Document} from 'mongoose';
 interface userProps {
   userName: String;
   passWord: String;
@@ -15,12 +15,19 @@ const userSchema = new Schema<userProps>({
   userName: { type: String, required: true },
   passWord: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  avatar: { type: String },
+  avatar: { type: String, default: "" },
   phoneNumber: { type: String, required: true },
   address: { type: String, required: true },
   tokenUser: [{ type: String }],
 });
-
+userSchema.pre("save", async function (next) {
+  const user = this
+  if (this.isModified("passWord")){
+    const hash = bscrypt.hashSync(user.passWord.toString(),8);
+    user.passWord = hash;
+  }
+  next();
+});
 const User = model<userProps>("User", userSchema);
 
 module.exports = User;
