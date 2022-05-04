@@ -25,7 +25,7 @@ exports.createUser = async (req: Request, res: Response) => {
   await newUser.save();
   res.json(newUser);
 };
-exports.signinUser = async (res: Response, req: Request) => {
+exports.signinUser = async (req: Request, res: Response) => {
   const { email, passWord } = req.body;
   if (!email.trim() || !passWord.trim()) {
     return res
@@ -36,9 +36,16 @@ exports.signinUser = async (res: Response, req: Request) => {
   if (!user) {
     return res.status(400).json({ success: false, error: "User not found !" });
   }
-  const isMatched = await user.comparePassword(passWord)
-  if(!isMatched){
-    return res.status(400).json({ success: false, error: "email/password does not match !" });
+  console.log(user);
+
+  const isMatch = await user.comparePassword(passWord);
+  if (!isMatch) {
+    return res
+      .status(400)
+      .json({ success: false, error: "email/password does not match !" });
   }
-  return res.json({ success: true, user:{id: user._id,email:user.email}})
+  return res.json({
+    success: true,
+    user: { id: user._id, email: user.email, passWord: user.passWord },
+  });
 };
