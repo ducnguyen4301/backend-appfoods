@@ -1,0 +1,208 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "BackEnd FoodCome ✨✨",
+    "description": "BackEnd FoodCome ✨✨",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "/api/v1",
+      "description": "Local Dev, or from Heroku"
+    }
+  ],
+  "tags": [
+    {
+        "name": "User",
+        "description": "API for user in the system"
+    }
+],
+"consumes": [
+    "application/json"
+],
+"produces": [
+    "application/json"
+],
+"paths": {
+    "/User": {
+        "get": {
+            "tags": [
+                "User"
+            ],
+            "summary": "Get all User in system",
+            "responses": {
+                "200": {
+                    "description": "OK",
+                    "schema": {
+                        "$ref": "api/v1/user/create"
+                    }
+                }
+            }
+        },
+        "post": {
+            "tags": [
+                "User"
+            ],
+            "summary": "Create a new user in system",
+            "requestBody": {
+                "description": "User Object",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "api/v1/user/create"
+                        }
+                    }
+                }
+            },
+            "produces": [
+                "application/json"
+            ],
+            "responses": {
+                "200": {
+                    "description": "OK",
+                    "schema": {
+                        "$ref": "api/v1/user/create"
+                    }
+                },
+                "400": {
+                    "description": "Failed. Bad post data."
+                }
+            }
+        }
+    },
+    "/User/{id}": {
+        "parameters": [
+            {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "description": "ID of the User that we want to match",
+                "type": "string"
+            }
+        ],
+        "get": {
+            "tags": [
+                "User"
+            ],
+            "summary": "Get User with given ID",
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "description": "User with id",
+                    "schema": {
+                        "$ref": "#/definitions/id"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "OK",
+                    "schema": {
+                        "$ref": "api/v1/user/create"
+                    }
+                },
+                "404": {
+                    "description": "Failed. User not found."
+                }
+            }
+        },
+        "put": {
+            "summary": "Update User with given ID",
+            "tags": [
+                "User"
+            ],
+            "requestBody": {
+                "description": "User Object",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "api/v1/user/create"
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "description": "User with new values of properties",
+                    "schema": {
+                        "$ref": "#/definitions/id"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "OK",
+                    "schema": {
+                        "$ref": "api/v1/user/create"
+                    }
+                },
+                "400": {
+                    "description": "Failed. Bad post data."
+                },
+                "404": {
+                    "description": "Failed. User not found."
+                }
+            }
+        },
+        "delete": {
+            "summary": "Delete User with given ID",
+            "tags": [
+                "User"
+            ],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "description": "Delete User with id",
+                    "schema": {
+                        "$ref": "#/definitions/id"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "OK",
+                    "schema": {
+                        "$ref": "#/definitions/id"
+                    }
+                },
+                "404": {
+                    "description": "Failed. User not found."
+                }
+            }
+        }
+    }
+},
+"definitions": {
+    "id": {
+        "properties": {
+            "uuid": {
+                "type": "string"
+            }
+        }
+    },
+    "User": {
+        "type": "object",
+        "properties": {
+            "User": {
+                "type": "object",
+                "additionalProperties": {
+                    "$ref": "api/v1/user"
+                }
+            }
+        }
+    }
+}
+}
