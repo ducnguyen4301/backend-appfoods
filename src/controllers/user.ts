@@ -2,11 +2,30 @@ import { Request, Response } from "express";
 import bscrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { env } from "process";
+import { CreateUserDTO, UserLogin } from "../dto/user.dto";
+import {
+  GeneratePassword,
+  GenerateSalt,
+  ValidatePassword,
+} from "../utils/helpers";
+import { User } from "../models/User";
+
 require("dotenv").config();
-const User = require("../models/user");
-exports.createUser = async (req: Request, res: Response) => {
-  const { userName, passWord, email, avatar, phoneNumber, address, tokenUser } =
-    req.body;
+export const signupUser = async (req: Request, res: Response) => {
+  const {
+    userName,
+    passWord,
+    email,
+    avatar,
+    phoneNumber,
+    address,
+    tokenUser,
+    verified,
+  } = <CreateUserDTO>req.body;
+  const salt = await GenerateSalt();
+  const userPassword = await GeneratePassword(passWord, salt);
+  console.log(userPassword);
+
   const checkEmail = await User.findOne({ email });
   if (checkEmail) {
     return res
@@ -15,18 +34,20 @@ exports.createUser = async (req: Request, res: Response) => {
   }
   const newUser = new User({
     userName,
-    passWord,
+    passWord: userPassword,
     email,
     avatar,
     phoneNumber,
     address,
+    salt,
+    verified,
     tokenUser,
   });
   await newUser.save();
   res.json(newUser);
 };
-exports.signinUser = async (req: Request, res: Response) => {
-  const { email, passWord } = req.body;
+export const signinUser = async (req: Request, res: Response) => {
+  const { email, passWord } = <UserLogin>req.body;
   if (!email.trim() || !passWord.trim()) {
     return res
       .status(400)
@@ -37,15 +58,20 @@ exports.signinUser = async (req: Request, res: Response) => {
     return res.status(400).json({ success: false, error: "User not found !" });
   }
   console.log(user);
-
-  const isMatch = await user.comparePassword(passWord);
-  if (!isMatch) {
+  const validation = await ValidatePassword(passWord, user.passWord, user.salt);
+  if (!validation) {
     return res
       .status(400)
       .json({ success: false, error: "email/password does not match !" });
   }
+  // const isMatch = await user.comparePassword(passWord);
+  // if (!isMatch) {
+  //   return res
+  //     .status(400)
+  //     .json({ success: false, error: "email/password does not match !" });
+  // }
   return res.json({
     success: true,
-    user: { id: user._id, email: user.email, passWord: user.passWord },
+    user: { id: user._id, email: user.email },
   });
 };

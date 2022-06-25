@@ -9,200 +9,72 @@
       "url": "https://opensource.org/licenses/MIT"
     }
   },
-  "servers": [
-    {
-      "url": "/api/v1",
-      "description": "Local Dev, or from Heroku"
-    }
-  ],
   "tags": [
     {
-        "name": "User",
-        "description": "API for user in the system"
+      "name": "User",
+      "description": "API for user in the system"
     }
-],
-"consumes": [
-    "application/json"
-],
-"produces": [
-    "application/json"
-],
-"paths": {
-    "/User": {
-        "get": {
-            "tags": [
-                "User"
-            ],
-            "summary": "Get all User in system",
-            "responses": {
-                "200": {
-                    "description": "OK",
-                    "schema": {
-                        "$ref": "api/v1/user/create"
-                    }
-                }
+  ],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/api/v1/user/signup": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Create a new user in system",
+        "requestBody": {
+          "description": "User Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
             }
+          }
         },
-        "post": {
-            "tags": [
-                "User"
-            ],
-            "summary": "Create a new user in system",
-            "requestBody": {
-                "description": "User Object",
-                "required": true,
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "api/v1/user/create"
-                        }
-                    }
-                }
-            },
-            "produces": [
-                "application/json"
-            ],
-            "responses": {
-                "200": {
-                    "description": "OK",
-                    "schema": {
-                        "$ref": "api/v1/user/create"
-                    }
-                },
-                "400": {
-                    "description": "Failed. Bad post data."
-                }
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
             }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
         }
-    },
-    "/User/{id}": {
-        "parameters": [
-            {
-                "name": "id",
-                "in": "path",
-                "required": true,
-                "description": "ID of the User that we want to match",
-                "type": "string"
-            }
-        ],
-        "get": {
-            "tags": [
-                "User"
-            ],
-            "summary": "Get User with given ID",
-            "parameters": [
-                {
-                    "in": "path",
-                    "name": "id",
-                    "required": true,
-                    "description": "User with id",
-                    "schema": {
-                        "$ref": "#/definitions/id"
-                    }
-                }
-            ],
-            "responses": {
-                "200": {
-                    "description": "OK",
-                    "schema": {
-                        "$ref": "api/v1/user/create"
-                    }
-                },
-                "404": {
-                    "description": "Failed. User not found."
-                }
-            }
-        },
-        "put": {
-            "summary": "Update User with given ID",
-            "tags": [
-                "User"
-            ],
-            "requestBody": {
-                "description": "User Object",
-                "required": true,
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "api/v1/user/create"
-                        }
-                    }
-                }
-            },
-            "parameters": [
-                {
-                    "in": "path",
-                    "name": "id",
-                    "required": true,
-                    "description": "User with new values of properties",
-                    "schema": {
-                        "$ref": "#/definitions/id"
-                    }
-                }
-            ],
-            "responses": {
-                "200": {
-                    "description": "OK",
-                    "schema": {
-                        "$ref": "api/v1/user/create"
-                    }
-                },
-                "400": {
-                    "description": "Failed. Bad post data."
-                },
-                "404": {
-                    "description": "Failed. User not found."
-                }
-            }
-        },
-        "delete": {
-            "summary": "Delete User with given ID",
-            "tags": [
-                "User"
-            ],
-            "parameters": [
-                {
-                    "in": "path",
-                    "name": "id",
-                    "required": true,
-                    "description": "Delete User with id",
-                    "schema": {
-                        "$ref": "#/definitions/id"
-                    }
-                }
-            ],
-            "responses": {
-                "200": {
-                    "description": "OK",
-                    "schema": {
-                        "$ref": "#/definitions/id"
-                    }
-                },
-                "404": {
-                    "description": "Failed. User not found."
-                }
-            }
-        }
+      }
     }
-},
-"definitions": {
+  },
+  "definitions": {
     "id": {
-        "properties": {
-            "uuid": {
-                "type": "string"
-            }
+      "properties": {
+        "uuid": {
+          "type": "string"
         }
+      }
     },
     "User": {
-        "type": "object",
-        "properties": {
-            "User": {
-                "type": "object",
-                "additionalProperties": {
-                    "$ref": "api/v1/user"
-                }
-            }
+      "type": "object",
+      "properties": {
+        "userName": {
+          "type": "string"
+        },
+        "passWord": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "address": {
+          "type:": "string"
         }
+      }
     }
-}
+  }
 }
