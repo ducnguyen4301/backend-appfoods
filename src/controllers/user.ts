@@ -8,7 +8,7 @@ import {
   GenerateSalt,
   ValidatePassword,
 } from "../utils/helpers";
-import { User } from "../models/User";
+import { User } from "../models/user";
 
 require("dotenv").config();
 export const signupUser = async (req: Request, res: Response) => {
