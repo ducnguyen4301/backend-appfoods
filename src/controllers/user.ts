@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import bscrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { env } from "process";
-import { CreateUserDTO, UserLogin } from "../dto/user.dto";
+import { CreateUserDTO, UserLoginEmail } from "../dto/user.dto";
 import {
   GeneratePassword,
   GenerateSalt,
@@ -47,7 +47,7 @@ export const signupUser = async (req: Request, res: Response) => {
   res.json(newUser);
 };
 export const signinUser = async (req: Request, res: Response) => {
-  const { email, passWord } = <UserLogin>req.body;
+  const { email, passWord } = <UserLoginEmail>req.body;
   if (!email.trim() || !passWord.trim()) {
     return res
       .status(400)
@@ -57,21 +57,27 @@ export const signinUser = async (req: Request, res: Response) => {
   if (!user) {
     return res.status(400).json({ success: false, error: "User not found !" });
   }
-  console.log(user);
   const validation = await ValidatePassword(passWord, user.passWord, user.salt);
   if (!validation) {
     return res
       .status(400)
       .json({ success: false, error: "email/password does not match !" });
   }
-  // const isMatch = await user.comparePassword(passWord);
-  // if (!isMatch) {
-  //   return res
-  //     .status(400)
-  //     .json({ success: false, error: "email/password does not match !" });
-  // }
   return res.json({
     success: true,
     user: { id: user._id, email: user.email },
   });
+};
+
+export const getUserProfile = async (req: Request, res: Response) => {
+  const customer = req.body;
+
+  if (customer) {
+    const profile = await User.findById(customer._id);
+
+    if (profile) {
+      return res.status(201).json(profile);
+    }
+  }
+  return res.status(400).json({ error: "User not found !" });
 };

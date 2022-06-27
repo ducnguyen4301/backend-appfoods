@@ -24,18 +24,6 @@ const userSchema = new Schema<userProps>({
   verified: { type: Boolean, default: false },
   tokenUser: [{ type: String }],
 });
-// userSchema.pre("save", async function (next) {
-//   const user = this;
-//   if (this.isModified("passWord")) {
-//     const hash = bscrypt.hashSync(user.passWord.toString(), 8);
-//     user.passWord = hash;
-//   }
-//   next();
-// });
-// userSchema.methods.comparePassword = async function (passWord: any) {
-//   const result = await bscrypt.compare(passWord, this.passWord);
-//   return result;
-// };
 const User = model<userProps>("User", userSchema);
 
 export { User };

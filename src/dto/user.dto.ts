@@ -10,7 +10,10 @@ export interface CreateUserDTO {
   verified: boolean;
 }
 
-export interface UserLogin {
+export interface UserLoginEmail {
   email: string;
   passWord: string;
+}
+export interface UserLoginPhone {
+  phoneNumber: string;
 }
