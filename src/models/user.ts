@@ -1,5 +1,4 @@
 import { Schema, model } from "mongoose";
-import bscrypt from "bcrypt";
 import { Document } from "mongoose";
 interface userProps extends Document {
   userName: string;

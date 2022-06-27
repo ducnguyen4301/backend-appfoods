@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import bscrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { env } from "process";
 import { CreateUserDTO, UserLoginEmail } from "../dto/user.dto";
