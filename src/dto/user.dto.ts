@@ -5,7 +5,6 @@ export interface CreateUserDTO {
   avatar: string;
   phoneNumber: string;
   address: string;
-  salt: string;
   accessToken: string;
   verified: boolean;
 }

@@ -13,15 +13,15 @@ interface userProps extends Document {
 }
 
 const userSchema = new Schema<userProps>({
-  name: { type: String },
+  name: { type: String, required: true },
   passWord: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   avatar: { type: String, default: "" },
   phoneNumber: { type: String },
   address: { type: String },
-  salt: { type: String,required: true },
+  salt: { type: String, required: true },
   verified: { type: Boolean, default: false },
-  accessToken: { type: String },
+  accessToken: { type: String, required: true },
 });
 const User = model<userProps>("User", userSchema);
 

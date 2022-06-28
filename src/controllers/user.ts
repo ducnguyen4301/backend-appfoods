@@ -1,6 +1,4 @@
-import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import { env } from "process";
+import { Request, Response } from "express";
 import { CreateUserDTO, UserLoginEmail } from "../dto/user.dto";
 import {
   GenerateAccessToken,
@@ -10,20 +8,12 @@ import {
   ValidatePassword,
 } from "../utils/helpers";
 import { User } from "../models/user";
-import { resolveSoa } from "dns";
 
 require("dotenv").config();
 export const signupUser = async (req: Request, res: Response) => {
-  const {
-    name,
-    passWord,
-    email,
-    avatar,
-    phoneNumber,
-    address,
-    accessToken,
-    verified,
-  } = <CreateUserDTO>req.body;
+  const { passWord, email, avatar, phoneNumber, address, verified } = <
+    CreateUserDTO
+  >req.body;
   const salt = await GenerateSalt();
   const userPassword = await GeneratePassword(passWord, salt);
 
@@ -33,26 +23,24 @@ export const signupUser = async (req: Request, res: Response) => {
       .status(400)
       .json({ success: false, error: "Email already exists !" });
   }
-
+  const name = await GenerateName();
+  const token = await GenerateAccessToken({ email: email });
   const newUser = await User.create({
-    name: "",
+    name: name,
     passWord: userPassword,
-    email,
+    email: email,
     avatar,
     phoneNumber: "",
     address: "",
     salt: salt,
-    verified,
-    accessToken,
+    verified: verified,
+    accessToken: token,
   });
   if (newUser) {
-    const token = await GenerateAccessToken({
-      email: newUser.email,
-    });
     return res.status(201).json({
+      success: true,
       accessToken: token,
       verified: newUser.verified,
-      email: newUser.email,
     });
   }
   return res
@@ -78,7 +66,7 @@ export const signinUser = async (req: Request, res: Response) => {
   }
   return res.json({
     success: true,
-    user: { id: user._id, email: user.email },
+    user: { id: user._id, email: user.email, accessToken: user.accessToken },
   });
 };
 
