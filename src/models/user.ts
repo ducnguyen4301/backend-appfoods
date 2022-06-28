@@ -1,27 +1,27 @@
 import { Schema, model } from "mongoose";
 import { Document } from "mongoose";
 interface userProps extends Document {
-  userName: string;
+  name: string;
   passWord: string;
   email: string;
   avatar: string;
   phoneNumber: string;
   address: string;
   salt: string;
-  tokenUser: [];
+  accessToken: string;
   verified: boolean;
 }
 
 const userSchema = new Schema<userProps>({
-  userName: { type: String, required: true },
+  name: { type: String },
   passWord: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   avatar: { type: String, default: "" },
-  phoneNumber: { type: String, required: true },
-  address: { type: String, required: true },
+  phoneNumber: { type: String },
+  address: { type: String },
   salt: { type: String,required: true },
   verified: { type: Boolean, default: false },
-  tokenUser: [{ type: String }],
+  accessToken: { type: String },
 });
 const User = model<userProps>("User", userSchema);
 

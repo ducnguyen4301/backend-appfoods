@@ -3,27 +3,29 @@ import jwt from "jsonwebtoken";
 import { env } from "process";
 import { CreateUserDTO, UserLoginEmail } from "../dto/user.dto";
 import {
+  GenerateAccessToken,
+  GenerateName,
   GeneratePassword,
   GenerateSalt,
   ValidatePassword,
 } from "../utils/helpers";
 import { User } from "../models/user";
+import { resolveSoa } from "dns";
 
 require("dotenv").config();
 export const signupUser = async (req: Request, res: Response) => {
   const {
-    userName,
+    name,
     passWord,
     email,
     avatar,
     phoneNumber,
     address,
-    tokenUser,
+    accessToken,
     verified,
   } = <CreateUserDTO>req.body;
   const salt = await GenerateSalt();
   const userPassword = await GeneratePassword(passWord, salt);
-  console.log(userPassword);
 
   const checkEmail = await User.findOne({ email });
   if (checkEmail) {
@@ -31,19 +33,31 @@ export const signupUser = async (req: Request, res: Response) => {
       .status(400)
       .json({ success: false, error: "Email already exists !" });
   }
-  const newUser = new User({
-    userName,
+
+  const newUser = await User.create({
+    name: "",
     passWord: userPassword,
     email,
     avatar,
-    phoneNumber,
-    address,
-    salt,
+    phoneNumber: "",
+    address: "",
+    salt: salt,
     verified,
-    tokenUser,
+    accessToken,
   });
-  await newUser.save();
-  res.json(newUser);
+  if (newUser) {
+    const token = await GenerateAccessToken({
+      email: newUser.email,
+    });
+    return res.status(201).json({
+      accessToken: token,
+      verified: newUser.verified,
+      email: newUser.email,
+    });
+  }
+  return res
+    .status(400)
+    .json({ success: false, error: "ERROR WHEN CREATING USER!" });
 };
 export const signinUser = async (req: Request, res: Response) => {
   const { email, passWord } = <UserLoginEmail>req.body;
@@ -69,7 +83,7 @@ export const signinUser = async (req: Request, res: Response) => {
 };
 
 export const getUserProfile = async (req: Request, res: Response) => {
-  const customer = req.body;
+  const customer = req.body._id;
 
   if (customer) {
     const profile = await User.findById(customer._id);
