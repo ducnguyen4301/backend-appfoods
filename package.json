@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node build/app.js",
     "dev": "ts-node-dev src/app.ts",
-    "deploy": "git add . && git commit -m Heroku && git push heroku main"
+    "deploy": "git add . && git commit -m Heroku && git push heroku origin main"
   },
   "keywords": [],
   "author": "",
