@@ -2,12 +2,11 @@ import { Response, Request } from "express";
 import bcrypt from "bcrypt";
 import { UserPayload } from "../dto/user.dto";
 import jwt from "jsonwebtoken";
-import { SALT, SECRET } from ".";
-
+import { env } from "process";
 export const sendError = (res: Response, error: any, status = 401) => {
   res.status(status).json({ success: false, error });
 };
-
+const SALT = 8;
 export const GenerateSalt = async () => {
   return await bcrypt.genSalt(SALT);
 };
@@ -28,5 +27,5 @@ export const GenerateName = async () => {
 };
 
 export const GenerateAccessToken = async (payload: UserPayload) => {
-  return jwt.sign(payload, SECRET, { expiresIn: "90d" });
+  return jwt.sign(payload, env.SECRET as string, { expiresIn: "7d" });
 };
